@@ -1,0 +1,7 @@
+gateway listening on 127.0.0.1:40377, kafka broker 127.0.0.1:9092, topic "telemetry-replay-bench"
+corpus: 5000 devices x 20 readings = 100000 unique readings; 105000 delivered (4.76% duplicates, targeting 5.00%)
+send complete in 305.244172ms over up to 400 concurrent WebSocket connections
+reference oracle: 100000 unique readings expected, digest 3995b050d1270842e64a15b9a68cdbb11026e94915b0891b17d7535cc6a48705
+kafka consumer:   100000 readings actually landed in kafka, digest 3995b050d1270842e64a15b9a68cdbb11026e94915b0891b17d7535cc6a48705
+
+RESULT: final state bit-identical after a 4.76%-duplicated, out-of-order replay: true

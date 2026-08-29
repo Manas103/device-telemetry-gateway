@@ -1,0 +1,13 @@
+# Build outputs
+/gateway
+/loadgen
+/outagebench
+*.exe
+*.test
+
+# Backpressure spool files created by running the pipeline locally
+*.dat
+
+# Editors / OS
+.DS_Store
+*.swp

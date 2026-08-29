@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package telemetry;
+
+option go_package = "device-telemetry-gateway/proto";
+
+// Reading is one telemetry sample from a simulated device, sent as a single
+// binary protobuf frame over the device's WebSocket connection. sequence is
+// the field the whole pipeline's correctness rests on: it is what dedup keys
+// on, and what proves, on replay, whether a duplicate or reordered delivery
+// was handled correctly.
+message Reading {
+  string device_id = 1;
+  uint64 sequence = 2;
+  int64 timestamp_ms = 3;
+  double value = 4;
+}

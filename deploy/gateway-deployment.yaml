@@ -1,0 +1,63 @@
+# Kubernetes shape the gateway is built for: horizontally scaled, stateless
+# ingest replicas in front of Kafka, each with its own local spool volume for
+# backpressure. Not applied to a live cluster in this session (no cluster
+# available here); validated only for YAML syntax and referenced honestly as
+# such in the README.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-telemetry-gateway
+  labels:
+    app: device-telemetry-gateway
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: device-telemetry-gateway
+  template:
+    metadata:
+      labels:
+        app: device-telemetry-gateway
+    spec:
+      containers:
+        - name: gateway
+          image: device-telemetry-gateway:latest
+          args:
+            - "-addr=0.0.0.0:8080"
+            - "-broker=$(KAFKA_BROKER)"
+            - "-topic=telemetry"
+            - "-spool=/var/lib/gateway/spool.dat"
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka-broker:9092"
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "128Mi"
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 2
+          volumeMounts:
+            - name: spool
+              mountPath: /var/lib/gateway
+      volumes:
+        - name: spool
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: device-telemetry-gateway
+spec:
+  selector:
+    app: device-telemetry-gateway
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP

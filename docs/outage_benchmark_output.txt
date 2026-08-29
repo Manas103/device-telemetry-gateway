@@ -1,0 +1,9 @@
+outage benchmark: 50 devices, 1 reading every 1s, total send window 1m25s (outage 1m0s starting at t=10s)
+[t=10s] simulated outage begins
+[t=1m10s] simulated outage ends, producer accepting writes again
+send phase complete: 4250 readings sent over 1m25s
+waiting for the drainer to flush the spool backlog (up to 5m0s)...
+spool drained after 1m25s
+
+sent: 4250, landed in kafka: 4250
+RESULT: records lost across the 1m0s simulated broker outage: 0

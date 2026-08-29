@@ -1,0 +1,19 @@
+?   	device-telemetry-gateway/internal/kafkaclient	[no test files]
+?   	device-telemetry-gateway/internal/simdevice	[no test files]
+?   	device-telemetry-gateway/internal/wsserver	[no test files]
+=== RUN   TestDedupAdmitsEachSequenceExactlyOnce
+--- PASS: TestDedupAdmitsEachSequenceExactlyOnce (0.00s)
+=== RUN   TestPipelineSpillsToDiskWhenProducerFails
+--- PASS: TestPipelineSpillsToDiskWhenProducerFails (0.00s)
+=== RUN   TestPipelineDrainerDeliversSpooledReadingsOnceTheProducerRecovers
+--- PASS: TestPipelineDrainerDeliversSpooledReadingsOnceTheProducerRecovers (0.00s)
+=== RUN   TestDuplicateReadingsAreNeverForwardedTwice
+--- PASS: TestDuplicateReadingsAreNeverForwardedTwice (0.00s)
+=== RUN   TestFinalStateDigestIsOrderIndependent
+--- PASS: TestFinalStateDigestIsOrderIndependent (0.00s)
+=== RUN   TestReferenceDedupKeepsFirstOccurrenceOnly
+--- PASS: TestReferenceDedupKeepsFirstOccurrenceOnly (0.00s)
+=== RUN   TestPipelineAgreesWithReferenceOverRandomDuplicatedOutOfOrderStreams
+--- PASS: TestPipelineAgreesWithReferenceOverRandomDuplicatedOutOfOrderStreams (0.09s)
+PASS
+ok  	device-telemetry-gateway/internal/ingest	1.112s
