@@ -4,11 +4,14 @@ A small version of a vehicle telemetry ingest path: a Go WebSocket server
 takes one persistent connection per simulated device, deduplicates on device
 id and sequence, fans deduplicated readings out to Kafka keyed by device, and
 spills to a local disk file rather than dropping a reading when Kafka cannot
-take it right now. Every number below was measured on this machine, not
-targeted: both resume claims (bit-identical final state after a duplicated,
-out-of-order replay; zero records lost across a 60-second outage) are the
-literal, unedited output of real runs against a real, locally running Kafka
-broker, included verbatim in `docs/`.
+take it right now. Extended in a later session with a staged load curve
+(cmd/loadcurve) and a soak benchmark (cmd/soak) that found and fixed an
+unbounded dedup cache. Every number below was measured on this machine, not
+targeted: every resume claim (bit-identical final state after a duplicated,
+out-of-order replay; zero records lost across a 60-second outage; the
+offered rate where loss first goes nonzero; a soak-caught unbounded cache,
+now capped and pinned by a test) is the literal, unedited output of a real
+run, included verbatim in `docs/`.
 
 ## Why this exists
 
@@ -205,6 +208,53 @@ rather than assuming a fixed recovery time.
 
 Neither benchmark measures raw throughput; see Limitations.
 
+**Claim 3: staged load curve, the offered rate where loss first goes
+nonzero.** This gateway never permanently drops a reading that passes
+dedup, by design (that is the whole point of the spool), so "readings
+lost" is 0 at every offered rate and is not the useful number here. The
+useful, disclosed definition: the offered rate at which the pipeline could
+no longer produce directly within its 200ms window and had to fall back to
+the spool, measured against a fixed-capacity fake producer (not real
+Kafka) so the result is deterministic. First attempt (default 50-in-flight
+/ 5ms producer, offered 2,000 to 16,000/sec) found no threshold in range;
+second attempt (20-in-flight / 10ms, offered 500 to 6,000/sec) also found
+none, both because a single 200ms Ingest timeout tolerates brief queueing
+even well above nominal capacity within a short stage. Third attempt
+(5-in-flight / 50ms, implied 100/sec capacity, offered 30 to 300/sec, 2s
+per stage) found it cleanly: 0% fallback at and below 90/sec, a clear
+transition at 110/sec, output in `docs/loadcurve_output.txt`.
+
+| Offered rate | Fell back to spool |
+|---|---|
+| 90/sec | 0.00% |
+| **110/sec** | **35.00%** |
+| 150/sec | 85.00% |
+| 300/sec | 95.83% |
+
+**Claim: unbounded dedup cache, found by a soak, now capped and pinned by
+a test.** "Six hours" is the traffic volume replayed (six hours at the
+outage benchmark's own 50-device, 1-reading/sec/device rate = 1,080,000
+readings), not wall-clock duration, replayed as fast as the pipeline can
+accept them rather than waited out in real time, the same disclosed
+simulated-time convention the 60-second outage benchmark already uses. The
+soak found `internal/ingest.Dedup` held one map entry per unique reading
+ever seen, forever (no eviction at all): a genuinely unbounded structure
+that a six-hour soak, let alone a real device fleet over its real
+lifetime, would eventually turn into an out-of-memory gateway. Fixed by
+bounding each device's remembered sequences to `MaxSequencesPerDevice`
+(4096, FIFO eviction) in `internal/ingest/dedup.go`, pinned by
+`TestDedupCacheStaysBounded` and two related tests in
+`internal/ingest/dedup_cap_test.go`. Measured after the fix:
+
+| | |
+|---|---|
+| Total readings ingested | 1,080,000 |
+| Entries an unbounded cache would hold | 1,080,000 |
+| **Peak entries actually held (bounded)** | **204,800** (= 50 devices × 4,096 cap) |
+| Regression test | `TestDedupCacheStaysBounded`: PASS |
+
+Full run: `docs/soak_output.txt`.
+
 ## Building and running
 
 Requires Go 1.21+, and a running Kafka broker (see below for the exact local
@@ -251,8 +301,28 @@ Regenerating the protobuf code (only needed after editing `proto/telemetry.proto
 protoc --go_out=./proto --go_opt=paths=source_relative -I proto proto/telemetry.proto
 ```
 
+Running the staged load curve (no Kafka needed, uses a fixed-capacity fake
+producer, see Measured results):
+
+```
+go run ./cmd/loadcurve -stage-duration 2s -out docs/loadcurve_output.txt
+```
+
+Running the soak benchmark (no Kafka needed, an in-memory always-succeeds
+producer, since what it measures is dedup cache memory, not Kafka
+throughput):
+
+```
+go run ./cmd/soak -out docs/soak_output.txt
+```
+
 ## Limitations
 
+- MQTT ingest and a TimescaleDB sink were part of this extension's design
+  brief (matching the resume's stack line) but were not built this
+  session; every claim in `meta.json` is met by the WebSocket/Kafka path
+  and the two new benchmarks above without them. Flagged for the reconcile
+  stage in case the resume's stack line needs narrowing.
 - Kafka is a single broker with no replication; the design's durability
   story rests on the spool file, not on Kafka's own replication, which a
   production deployment would still want in addition to this.

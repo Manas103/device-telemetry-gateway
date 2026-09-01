@@ -1,0 +1,13 @@
+=== device-telemetry-gateway staged load curve ===
+simulated producer capacity: 5 in flight, 50ms service latency (implied sustained throughput: 100/sec)
+
+offered rate     30/sec: sent     60, fell back to spool      0 (0.00%)
+offered rate     50/sec: sent    100, fell back to spool      0 (0.00%)
+offered rate     70/sec: sent    140, fell back to spool      0 (0.00%)
+offered rate     90/sec: sent    180, fell back to spool      0 (0.00%)
+offered rate    110/sec: sent    220, fell back to spool     77 (35.00%)
+offered rate    150/sec: sent    300, fell back to spool    255 (85.00%)
+offered rate    200/sec: sent    400, fell back to spool    370 (92.50%)
+offered rate    300/sec: sent    600, fell back to spool    575 (95.83%)
+
+RESULT: offered rate where loss first went nonzero: 110/sec

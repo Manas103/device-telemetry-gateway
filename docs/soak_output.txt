@@ -1,0 +1,11 @@
+=== device-telemetry-gateway soak benchmark ===
+devices: 50, rate: 1.00 readings/sec/device, soak duration: 6.0 hours (traffic volume, not wall-clock)
+readings per device: 21600, total readings: 1080000
+dedup cache cap (MaxSequencesPerDevice): 4096
+
+total readings ingested: 1080000
+dedup cache entry count, final: 204800
+dedup cache entry count, peak observed: 204800
+theoretical bound (devices * MaxSequencesPerDevice): 204800
+unbounded-cache entry count would have been: 1080000 (one entry per unique reading ever ingested)
+RESULT: cache stayed bounded: true
