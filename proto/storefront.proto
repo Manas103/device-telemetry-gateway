@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package storefront;
+
+option go_package = "device-telemetry-gateway/proto";
+
+// StorefrontEvent is one simulated storefront interaction, sent as a single
+// binary protobuf frame to the event edge. event_id is what this edge's
+// dedup keys on (unlike telemetry.Reading's compound device_id+sequence key,
+// a storefront event already carries a single globally unique id, the way a
+// real event-tracking SDK assigns one client-side per event so a retried
+// send is trivially identifiable). attributes carries event-type-specific
+// fields (category, sku, price) as strings so the schema does not need a
+// oneof per event type; the segment engine parses only the attributes a
+// given segment predicate needs.
+message StorefrontEvent {
+  string event_id = 1;
+  string profile_id = 2;
+  string event_type = 3; // page_view | add_to_cart | purchase | cart_abandon
+  int64 timestamp_ms = 4;
+  map<string, string> attributes = 5;
+}

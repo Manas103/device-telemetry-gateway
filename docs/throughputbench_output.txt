@@ -1,0 +1,4 @@
+=== device-telemetry-gateway storefront edge sustained throughput benchmark ===
+workers: 400, offered duration: 15s
+sent (accepted+produced): 537264, errors: 0, elapsed: 15.011301254s
+RESULT: sustained throughput: 35791 events/sec

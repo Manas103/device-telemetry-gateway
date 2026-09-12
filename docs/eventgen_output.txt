@@ -1,0 +1,6 @@
+=== device-telemetry-gateway storefront event dedup benchmark ===
+profiles: 500, unique events: 3349, delivered (with duplicates): 3525 (target dup fraction 5.00%)
+send phase: 3349 accepted, 176 rejected as duplicates by the edge, 0 produce errors, in 36.131048833s
+kafka-materialized unique event ids: 3349
+reference-dedup unique event ids (independent, over the same delivered stream): 3349
+RESULT: edge-dedup-into-kafka matches independent reference exactly: true

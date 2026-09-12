@@ -1,0 +1,19 @@
+=== device-telemetry-gateway segment membership engine benchmark ===
+profiles: 20000, avg events/profile: 5, history window: 120 days
+test segments: 50
+corpus: 110032 events across 20000 profiles
+send phase: 110032 events sent in 2m31.002503063s (729 events/sec offered)
+consumed by segment engine: 110032 / 110032
+RESULT: event-to-segment p99 lag: 134.0 ms (n=110032 samples)
+finalize sweep: re-evaluated 20000 touched profiles as of simulated now (2026-09-12T20:43:18Z)
+clickhouse event store: 110032 rows, 20000 distinct profiles
+
+--- full recompute vs incremental diff, all 50 segments ---
+RESULT: 50 / 50 segments matched the full recompute exactly (0 mismatched profile-segment pairs total)
+
+--- burst backlog drain ---
+baseline sustained rate: 729/sec, burst target rate: 7287/sec (10x), burst duration: 8s, burst volume: 58294 events
+burst produced in 1m17.8706927s
+RESULT: backlog drained (lag=0) in 10.574019ms (cap 3m0s)
+
+done.
