@@ -1,0 +1,4 @@
+=== device-telemetry-gateway delivery-stats edge throughput benchmark ===
+workers: 6 (courtesy cap), batch size: 400, offered duration: 10s
+sent (accepted+produced): 1091600, errors: 0, elapsed: 10.021349207s
+RESULT: sustained throughput: 108927 webhooks/sec

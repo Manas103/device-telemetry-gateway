@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package deliverystats;
+
+option go_package = "device-telemetry-gateway/proto";
+
+// DeliveryWebhook is one simulated provider delivery-status callback for a
+// single outbound message, across three channels (email, sms, whatsapp).
+// webhook_id is what this edge's dedup keys on, not message_id: a real
+// provider (SendGrid, Twilio, the WhatsApp Business API) retries a webhook
+// POST on any non-2xx response or a receiver timeout, resending the
+// identical webhook_id, so the dedup key here has to be the delivery
+// attempt's own id. message_id is not unique in this stream by design: one
+// outbound message legitimately produces more than one webhook over its
+// lifecycle (sent, then delivered, then possibly bounced), and the
+// dashboard's per-channel counts are counts of webhooks (delivery events),
+// not counts of distinct messages.
+message DeliveryWebhook {
+  string webhook_id = 1;
+  string message_id = 2;
+  string channel = 3;   // email | sms | whatsapp
+  string status = 4;    // sent | delivered | bounced | failed
+  int64 timestamp_ms = 5;
+  string provider = 6;  // sendgrid | twilio | meta_whatsapp (simulated)
+}

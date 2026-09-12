@@ -1,0 +1,78 @@
+?   	device-telemetry-gateway/cmd/deliveryburst	[no test files]
+?   	device-telemetry-gateway/cmd/deliverygateway	[no test files]
+?   	device-telemetry-gateway/cmd/deliverygen	[no test files]
+?   	device-telemetry-gateway/cmd/deliveryscale	[no test files]
+?   	device-telemetry-gateway/cmd/deliverythroughput	[no test files]
+?   	device-telemetry-gateway/cmd/eventgen	[no test files]
+?   	device-telemetry-gateway/cmd/gateway	[no test files]
+?   	device-telemetry-gateway/cmd/loadcurve	[no test files]
+?   	device-telemetry-gateway/cmd/loadgen	[no test files]
+?   	device-telemetry-gateway/cmd/outagebench	[no test files]
+?   	device-telemetry-gateway/cmd/segmentbench	[no test files]
+?   	device-telemetry-gateway/cmd/soak	[no test files]
+?   	device-telemetry-gateway/cmd/throughputbench	[no test files]
+?   	device-telemetry-gateway/internal/kafkaclient	[no test files]
+?   	device-telemetry-gateway/internal/simdevice	[no test files]
+?   	device-telemetry-gateway/internal/simstorefront	[no test files]
+?   	device-telemetry-gateway/internal/wsserver	[no test files]
+?   	device-telemetry-gateway/proto	[no test files]
+=== RUN   TestWebhookDedupAdmitsEachWebhookIDExactlyOnce
+--- PASS: TestWebhookDedupAdmitsEachWebhookIDExactlyOnce (0.00s)
+=== RUN   TestWebhookDedupBookkeepingStaysConsistentAtSmallScale
+--- PASS: TestWebhookDedupBookkeepingStaysConsistentAtSmallScale (0.00s)
+=== RUN   TestDuplicateWebhooksAreNeverForwardedTwice
+--- PASS: TestDuplicateWebhooksAreNeverForwardedTwice (0.00s)
+=== RUN   TestPipelinePropagatesProducerErrorsWithoutSuppressingDedup
+--- PASS: TestPipelinePropagatesProducerErrorsWithoutSuppressingDedup (0.00s)
+=== RUN   TestReferenceDedupKeepsFirstOccurrenceOnly
+--- PASS: TestReferenceDedupKeepsFirstOccurrenceOnly (0.00s)
+=== RUN   TestPipelineAgreesWithReferenceOverRandomRetriedDeliveries
+--- PASS: TestPipelineAgreesWithReferenceOverRandomRetriedDeliveries (0.05s)
+=== RUN   TestBuildProducesTwoOrThreeWebhooksPerMessageAcrossAllChannels
+--- PASS: TestBuildProducesTwoOrThreeWebhooksPerMessageAcrossAllChannels (0.00s)
+PASS
+ok  	device-telemetry-gateway/internal/deliverystats	1.079s
+=== RUN   TestEventDedupAdmitsEachEventIDExactlyOnce
+--- PASS: TestEventDedupAdmitsEachEventIDExactlyOnce (0.00s)
+=== RUN   TestEventDedupEvictsOldestOnceBoundExceeded
+--- PASS: TestEventDedupEvictsOldestOnceBoundExceeded (0.00s)
+=== RUN   TestDuplicateEventsAreNeverForwardedTwice
+--- PASS: TestDuplicateEventsAreNeverForwardedTwice (0.00s)
+=== RUN   TestPipelinePropagatesProducerErrorsWithoutSuppressingDedup
+--- PASS: TestPipelinePropagatesProducerErrorsWithoutSuppressingDedup (0.00s)
+=== RUN   TestReferenceDedupKeepsFirstOccurrenceOnly
+--- PASS: TestReferenceDedupKeepsFirstOccurrenceOnly (0.00s)
+=== RUN   TestPipelineAgreesWithReferenceOverRandomDuplicatedDeliveries
+--- PASS: TestPipelineAgreesWithReferenceOverRandomDuplicatedDeliveries (0.05s)
+PASS
+ok  	device-telemetry-gateway/internal/eventingest	1.075s
+=== RUN   TestDedupCacheStaysBounded
+--- PASS: TestDedupCacheStaysBounded (0.02s)
+=== RUN   TestDedupCacheEvictionDoesNotReadmitRecentDuplicates
+--- PASS: TestDedupCacheEvictionDoesNotReadmitRecentDuplicates (0.00s)
+=== RUN   TestDedupCacheIsPerDevice
+--- PASS: TestDedupCacheIsPerDevice (0.01s)
+=== RUN   TestDedupAdmitsEachSequenceExactlyOnce
+--- PASS: TestDedupAdmitsEachSequenceExactlyOnce (0.00s)
+=== RUN   TestPipelineSpillsToDiskWhenProducerFails
+--- PASS: TestPipelineSpillsToDiskWhenProducerFails (0.00s)
+=== RUN   TestPipelineDrainerDeliversSpooledReadingsOnceTheProducerRecovers
+--- PASS: TestPipelineDrainerDeliversSpooledReadingsOnceTheProducerRecovers (0.00s)
+=== RUN   TestDuplicateReadingsAreNeverForwardedTwice
+--- PASS: TestDuplicateReadingsAreNeverForwardedTwice (0.00s)
+=== RUN   TestFinalStateDigestIsOrderIndependent
+--- PASS: TestFinalStateDigestIsOrderIndependent (0.00s)
+=== RUN   TestReferenceDedupKeepsFirstOccurrenceOnly
+--- PASS: TestReferenceDedupKeepsFirstOccurrenceOnly (0.00s)
+=== RUN   TestPipelineAgreesWithReferenceOverRandomDuplicatedOutOfOrderStreams
+--- PASS: TestPipelineAgreesWithReferenceOverRandomDuplicatedOutOfOrderStreams (0.09s)
+PASS
+ok  	device-telemetry-gateway/internal/ingest	1.147s
+=== RUN   TestGenerateTestSegmentsCountAndUniqueIDs
+--- PASS: TestGenerateTestSegmentsCountAndUniqueIDs (0.00s)
+=== RUN   TestDiffSetsExactMatch
+--- PASS: TestDiffSetsExactMatch (0.00s)
+=== RUN   TestDiffSetsDetectsDisagreementInBothDirections
+--- PASS: TestDiffSetsDetectsDisagreementInBothDirections (0.00s)
+PASS
+ok  	device-telemetry-gateway/internal/segment	1.017s

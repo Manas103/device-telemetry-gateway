@@ -1,0 +1,9 @@
+=== device-telemetry-gateway delivery-stats webhook dedup benchmark ===
+messages: 2000, unique webhooks: 4000, delivered (with retries): 4210 (target retry fraction 5.00%)
+  channel email      unique webhooks: 1374
+  channel sms        unique webhooks: 1260
+  channel whatsapp   unique webhooks: 1366
+send phase: 4000 accepted, 210 rejected as duplicates by the edge, 0 produce errors, in 42.631934817s
+kafka-materialized unique webhook ids: 4000
+reference-dedup unique webhook ids (independent, over the same delivered stream): 4000
+RESULT: edge-dedup-into-kafka matches independent reference exactly: true

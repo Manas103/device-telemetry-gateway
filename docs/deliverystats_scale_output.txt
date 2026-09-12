@@ -1,0 +1,27 @@
+=== device-telemetry-gateway delivery-stats ClickHouse scale benchmark ===
+target events: 50000000, batch size: 100000, insert workers: 6 (courtesy cap), history window: 30 days
+  loaded 5000000 / 50000000 rows (4s elapsed)
+  loaded 10000000 / 50000000 rows (8s elapsed)
+  loaded 15000000 / 50000000 rows (11s elapsed)
+  loaded 20000000 / 50000000 rows (14s elapsed)
+  loaded 25000000 / 50000000 rows (17s elapsed)
+  loaded 30000000 / 50000000 rows (20s elapsed)
+  loaded 35000000 / 50000000 rows (24s elapsed)
+  loaded 40000000 / 50000000 rows (28s elapsed)
+  loaded 45000000 / 50000000 rows (30s elapsed)
+  loaded 50000000 / 50000000 rows (34s elapsed)
+bulk load complete: 50000000 rows in 33.734478313s (1482163 rows/sec)
+clickhouse delivery_events row count: 50000000
+rollup refresh complete in 1.552640076s
+clickhouse delivery_rollup_minute row count: 518412 (0.0104x the raw table)
+
+--- rollup-vs-recompute exactness check ---
+RESULT: 12 / 12 (channel,status) pairs match exactly between rollup and full recompute
+RESULT: recompute total = 50000000, rollup total = 50000000, counts exact overall: true
+
+--- dashboard query latency: raw table vs rollup table ---
+trailing window: 30.0 days, trials per query: 20
+raw-table query latency:    p95 = 8651.0 ms (min=5532.0 max=9564.0, n=20)
+rollup-table query latency: p95 = 416.0 ms (min=256.0 max=441.0, n=20)
+RESULT: rollup speedup: 20.8x (raw p95 8651.0 ms -> rollup p95 416.0 ms)
+done.

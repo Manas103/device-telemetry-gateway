@@ -1,0 +1,8 @@
+=== device-telemetry-gateway delivery-stats 10x burst backlog drain benchmark ===
+baseline phase: offering unthrottled for 6s to measure sustained rate
+baseline: 3352 webhooks sent in 6.033641942s (556/sec sustained)
+burst phase: offering ~5556/sec (10x baseline) for 6s
+burst: 3366 webhooks sent in 6.051561244s
+RESULT: backlog drained (lag=0) in 10.447644ms (cap 4m0s)
+total webhooks consumed by end of run: 6718
+done.
